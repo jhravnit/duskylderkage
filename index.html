@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tænk før du klikker — Awareness test</title>
+  <meta name="description" content="Kort awareness-budskab til IT-sikkerhed — Tænk før du klikker. Heldigvis var dette kun en test… men du skylder nu kage." />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#0a84ff" />
+  <style>
+    :root{
+      --bg: hsl(220 15% 8%);
+      --fg: hsl(0 0% 100%);
+      --muted: hsl(0 0% 100% / .68);
+      --card: hsl(0 0% 100% / .08);
+      --border: hsl(0 0% 100% / .14);
+      --accent: #0a84ff;
+      --accent-2: #64d2ff;
+      --radius: 18px;
+      --shadow: 0 10px 30px hsl(0 0% 0% / .35);
+      --maxw: 1024px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: hsl(220 30% 98%);
+        --fg: hsl(222 27% 12%);
+        --muted: hsl(222 27% 12% / .70);
+        --card: hsl(0 0% 100% /.65);
+        --border: hsl(220 20% 85% /.8);
+        --shadow: 0 12px 28px hsl(220 20% 30% / .18);
+      }
+    }
+    *{ box-sizing: border-box }
+    html,body{ height:100% }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display","SF Pro Text","Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      line-height:1.5;
+      color: var(--fg);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, hsl(212 100% 54% / .18), transparent 70%),
+        radial-gradient(1000px 500px at 95% 0%, hsl(195 100% 70% / .18), transparent 60%),
+        radial-gradient(800px 600px at 50% 110%, hsl(265 80% 70% / .14), transparent 60%),
+        var(--bg);
+      background-attachment: fixed;
+    }
+    .wrap{ max-width: var(--maxw); margin: 0 auto; padding: clamp(16px, 2vw, 32px); }
+    header{
+      display:flex; align-items:center; gap:12px;
+      padding: 14px;
+      border-radius: calc(var(--radius) + 6px);
+      backdrop-filter: saturate(140%) blur(10px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .brand{ display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px; }
+    .badge{ font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: hsl(0 0% 100% / .08); }
+    .hero{ margin: clamp(24px, 4vw, 48px) 0; display:grid; grid-template-columns: 1.1fr .9fr; gap: clamp(16px, 3vw, 28px); }
+    @media (max-width: 900px){ .hero{ grid-template-columns: 1fr } }
+    .card{ border-radius: var(--radius); backdrop-filter: blur(12px) saturate(160%); background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: clip; }
+    .p-lg{ padding: clamp(18px, 3vw, 28px) }
+    .p-md{ padding: clamp(14px, 2vw, 20px) }
+    h1{ margin: 0 0 .4em; font-size: clamp(32px, 4vw, 54px); line-height: 1.1; letter-spacing: -0.02em; }
+    .lede{ font-size: clamp(16px, 1.4vw, 20px); color: var(--muted); margin: 0 0 18px; }
+    .tip-list{ margin: 16px 0 0; padding: 0 0 0 1.2em; }
+    .tip-list li{ margin: .25em 0 }
+    .btn-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 18px }
+    .btn{
+      appearance:none; border:0; cursor:pointer; padding: 12px 16px; border-radius: 14px;
+      font-weight: 600; background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      color: white; box-shadow: 0 8px 20px hsl(208 100% 45% / .35);
+      transition: transform .15s ease, filter .2s ease;
+    }
+    .btn:active{ transform: translateY(1px) scale(.995) }
+    .btn.secondary{ background: transparent; color: var(--fg); border:1px solid var(--border); box-shadow: none; }
+    figure{ margin:0; position:relative; overflow:hidden; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: hsl(0 0% 100% / .04); }
+    img{ display:block; width:100%; height:auto; object-fit: cover; transform: scale(1.002); }
+    figcaption{ padding: 10px 14px; font-size: 14px; color: var(--muted); display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .foot{ margin: 28px 0 10px; font-size: 13px; color: var(--muted); }
+    .fade-in{ opacity:0; transform: translateY(8px); animation: in .55s ease forwards }
+    .fade-in:nth-child(2){ animation-delay: .08s }
+    .fade-in:nth-child(3){ animation-delay: .14s }
+    @keyframes in{ to{ opacity:1; transform:none } }
+    @media (prefers-reduced-motion: reduce){ .fade-in{ animation:none; opacity:1; transform:none } .btn{ transition:none } }
+    #fx{ position: fixed; inset: 0; pointer-events: none; }
+    a{ color: var(--accent) }
+    .sr-only{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; clip:rect(0 0 0 0); overflow:hidden; }
+  </style>
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <header class="card p-md fade-in" role="banner">
+      <div class="brand" aria-label="Brand">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <rect x="4" y="10" width="16" height="10" rx="2.6" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="15" r="1.8" fill="currentColor"/>
+        </svg>
+        <span>Awareness • IT-sikkerhed</span>
+      </div>
+      <span class="badge" aria-label="test badge">Dette er en test</span>
+    </header>
+
+    <main class="hero" role="main">
+      <section class="card p-lg fade-in" aria-labelledby="h-title">
+        <h1 id="h-title">🔒 Tænk før du klikker</h1>
+        <p class="lede">
+          Selv mails og beskeder fra kendte eller tillidsvækkende afsendere kan være manipulerede.
+          Klik aldrig på links eller åbn filer ukritisk — stop altid op og overvej, om det giver mening.
+        </p>
+        <ul class="tip-list" aria-label="hurtige tips">
+          <li>Hold musen over linket og tjek adressen, før du klikker.</li>
+          <li>Er du i tvivl? Brug en <em>ny</em> tråd/kanal og ring/skriv til afsenderen.</li>
+          <li>Rapportér mistænkelige mails via virksomhedens procedure.</li>
+        </ul>
+        <div class="btn-row">
+          <button class="btn" id="copyBtn" aria-describedby="copyStatus">Kopiér budskabet</button>
+          <button class="btn secondary" id="printBtn">Print som plakat</button>
+        </div>
+        <p id="copyStatus" class="sr-only" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="card p-lg fade-in" aria-labelledby="cake-title">
+        <h2 id="cake-title" style="margin:0 0 .6em; font-size:clamp(22px,2.4vw,28px)">👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰</h2>
+        <figure>
+          <img id="cake" alt="En lækker lagkage, blød glasur og smulder på toppen" />
+          <figcaption>
+            <span>Bevismateriale</span>
+            <a id="cakeLink" target="_blank" rel="noopener">Åbn billedet</a>
+          </figcaption>
+        </figure>
+        <div class="btn-row">
+          <button class="btn" id="cakeBtn">Jeg tager kage med</button>
+          <button class="btn secondary" id="shareBtn">Del siden</button>
+        </div>
+        <p class="foot">PS: Vores mål er ikke at fange dig — men at hjælpe dig med at opdage forsøgene i tide.</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ---- Brug lokal fil i samme mappe
+    const CAKE_IMG_URL = "kage.png";
+
+    // Set image + link
+    const cakeImg = document.getElementById('cake');
+    const cakeLink = document.getElementById('cakeLink');
+    cakeImg.src = CAKE_IMG_URL;
+    cakeLink.href = CAKE_IMG_URL;
+
+    // Copy text
+    const copyBtn = document.getElementById('copyBtn');
+    const copyStatus = document.getElementById('copyStatus');
+    copyBtn.addEventListener('click', async () => {
+      const text = `🔒 Tænk før du klikker
+Selv mails og beskeder fra kendte eller tillidsvækkende afsendere kan være manipulerede.
+Klik aldrig på links eller åbn filer ukritisk — stop altid op og overvej, om det giver mening.
+
+👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰`;
+      try{
+        await navigator.clipboard.writeText(text);
+        copyStatus.textContent = "Teksten er kopieret.";
+        toast("Teksten er kopieret ✅");
+      }catch{
+        copyStatus.textContent = "Kunne ikke kopiere automatisk — marker teksten og kopier.";
+        toast("Kunne ikke kopiere automatisk");
+      }
+    });
+
+    // Print
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // Share
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if(navigator.share){
+        try{
+          await navigator.share({ title: document.title, text: "Tænk før du klikker — awareness test", url: location.href });
+        }catch(e){}
+      } else { toast("Deling ikke understøttet på denne enhed"); }
+    });
+
+    // Cake button
+    document.getElementById('cakeBtn').addEventListener('click', () => {
+      confetti({ duration: 1400, count: 180 });
+      toast("Respekt! Kage er på vej 🎉");
+    });
+
+    // Toast helper
+    function toast(msg){
+      const el = document.createElement('div');
+      el.textContent = msg;
+      Object.assign(el.style,{
+        position:'fixed', left:'50%', bottom:'24px', transform:'translateX(-50%)',
+        background:'rgba(0,0,0,.78)', color:'#fff', padding:'10px 14px',
+        borderRadius:'12px', fontSize:'14px', zIndex:9999, boxShadow:'0 10px 30px rgba(0,0,0,.35)'
+      });
+      if(matchMedia('(prefers-color-scheme: light)').matches){
+        el.style.background = 'rgba(20,20,20,.88)';
+      }
+      document.body.appendChild(el);
+      setTimeout(()=> el.style.opacity = '0', 1400);
+      setTimeout(()=> el.remove(), 1800);
+    }
+
+    // Confetti
+    function confetti({duration=1200, count=150}={}){
+      if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const canvas = document.getElementById('fx');
+      const ctx = canvas.getContext('2d');
+      const dpr = Math.max(devicePixelRatio || 1, 1);
+      const resize = () => {
+        canvas.width = innerWidth * dpr;
+        canvas.height = innerHeight * dpr;
+        ctx.scale(dpr, dpr);
+      };
+      resize();
+      const colors = ["#0a84ff","#64d2ff","#30d158","#ff9f0a","#bf5af2","#ff375f"];
+      const rand = (min,max)=> Math.random()*(max-min)+min;
+      const parts = Array.from({length: count}, () => ({
+        x: rand(0, innerWidth), y: rand(-20, innerHeight * .2),
+        vx: rand(-1.2, 1.2), vy: rand(1.5, 3.8),
+        w: rand(6, 10), h: rand(8, 14),
+        r: rand(0, 360), rv: rand(-8, 8),
+        c: colors[(Math.random()*colors.length)|0]
+      }));
+      const start = performance.now();
+      let raf;
+      const tick = (t)=>{
+        const dt = (t - (tick._last||t)) / 16.666;
+        tick._last = t;
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+        for(const p of parts){
+          p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.rv * dt;
+          if(p.y > innerHeight + 20) { p.y = -10; p.x = rand(0, innerWidth) }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.r * Math.PI/180);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.restore();
+        }
+        if(t - start < duration){ raf = requestAnimationFrame(tick) }
+        else { ctx.clearRect(0,0,innerWidth,innerHeight); cancelAnimationFrame(raf) }
+      };
+      addEventListener('resize', resize, { once:true });
+      raf = requestAnimationFrame(tick);
+    }
+  </script>
+</body>
+</html>
