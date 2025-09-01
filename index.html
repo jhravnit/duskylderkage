@@ -202,9 +202,7 @@
         const dt = (t - (tick._last||t)) / 16.666; tick._last = t;
         ctx.clearRect(0,0,innerWidth,innerHeight);
         for(const p of parts){
-          p.x += p.vx * dt;
-          p.y += p.vy * dt;
-          p.r += p.rv * dt;
+          p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.rv * dt;
           if(p.y > innerHeight + 20) { p.y = -10; p.x = Math.random()*innerWidth }
           ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r * Math.PI/180);
           ctx.fillStyle = p.c; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
@@ -222,16 +220,22 @@
       const subject = "Awareness test: Jeg skylder kage";
       const body = "Hej,\n\nJeg klikkede på linket i awareness-testen og skylder kage. 🍰\n\nHilsen\n";
       const mailto = `mailto:jh@ravnit.dk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      // lille delay så konfettien kan ses et splitsekund
       setTimeout(()=>{ window.location.href = mailto; }, 500);
     });
 
-    /* ===== Kage-Invaders (hurtigere) ===== */
+    /* ===== Kage-Invaders (hurtigere) + Ravn IT logo som spiller ===== */
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('overlay');
 
-    // Responsiv/retina tilpasning
+    // Logo-konfiguration
+    const PLAYER_LOGO_URL = "logo.png"; // ← ret filnavn hvis dit logo hedder noget andet
+    const playerImg = new Image();
+    playerImg.src = PLAYER_LOGO_URL;
+    let playerImgReady = false;
+    playerImg.onload = () => { playerImgReady = true; };
+
+    // Responsiv/retina
     function fitCanvas(){
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       const rect = canvas.getBoundingClientRect();
@@ -246,16 +250,21 @@
     const state = {
       running:false, gameOver:false,
       score:0, level:1, lives:3,
-      lastShotAt:0, shootDelay:180, // lidt hurtigere skud
+      lastShotAt:0, shootDelay:180,
       mouseX: canvas.clientWidth/2,
-      player:{x:280,y:0,w:58,h:12},
+      player:{x:280,y:0,w:96,h:28}, // bredde til logoet
       bullets:[], enemies:[], enemyDir:1,
-      enemySpeedBase:0.6, // hurtigere start
+      enemySpeedBase:0.6,
     };
 
     function placePlayer(){
       const H = canvas.clientHeight;
-      state.player.y = H - 40;
+      // justér højde ift. logoets ratio, hvis kendt
+      if (playerImgReady && playerImg.naturalWidth && playerImg.naturalHeight){
+        const ratio = playerImg.naturalHeight / playerImg.naturalWidth;
+        state.player.h = Math.max(20, Math.round(state.player.w * ratio));
+      }
+      state.player.y = H - (state.player.h + 20);
       state.player.x = (canvas.clientWidth - state.player.w)/2;
     }
     function spawnWave(level=1){
@@ -292,14 +301,19 @@
       if(state.gameOver){ resetGame(); return; }
       shoot();
     });
+    // Klik på overlay starter ny omgang
+    overlay.addEventListener('click', ()=>{ if(state.gameOver) resetGame(); });
 
     function shoot(){
       const now = performance.now();
       if(now - state.lastShotAt < state.shootDelay) return;
       state.lastShotAt = now;
-      // konfetti ved skud (lille mængde for performance)
-      confetti({ duration: 250, count: 24 });
-      state.bullets.push({ x: state.player.x + state.player.w/2 - 2, y: state.player.y - 10, w:4, h:10, vy:-7.6 });
+      confetti({ duration: 250, count: 24 }); // konfetti ved skud
+      state.bullets.push({
+        x: state.player.x + state.player.w/2 - 2,
+        y: state.player.y - 10,
+        w:4, h:10, vy:-7.6
+      });
     }
 
     // HUD
@@ -315,9 +329,13 @@
     // Tegn
     function drawPlayer(){
       const p = state.player;
-      ctx.fillStyle = 'white';
-      ctx.fillRect(p.x, p.y, p.w, p.h);
-      ctx.fillRect(p.x + p.w*0.4, p.y - 10, p.w*0.2, 10);
+      if(playerImgReady){
+        ctx.drawImage(playerImg, p.x, p.y - (p.h*0.02), p.w, p.h); // lille optisk justering
+      } else {
+        // Fallback: diskret "placeholder"
+        ctx.fillStyle = 'rgba(255,255,255,.85)';
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+      }
     }
     function drawBullet(b){
       ctx.fillStyle = '#64d2ff';
@@ -345,15 +363,15 @@
       for(const b of state.bullets){ b.y += b.vy * dt; }
       state.bullets = state.bullets.filter(b => b.y + b.h > 0);
 
-      // Fjender
-      const speed = (state.enemySpeedBase + (state.level-1)*0.15); // hurtigere progression
+      // Fjender (hurtigere progression)
+      const speed = (state.enemySpeedBase + (state.level-1)*0.15);
       let minX=Infinity, maxX=-Infinity;
       for(const e of state.enemies){ minX = Math.min(minX, e.x); maxX = Math.max(maxX, e.x + e.w); }
       if(maxX > W - 16) state.enemyDir = -1;
       if(minX < 16) state.enemyDir = 1;
       for(const e of state.enemies){ e.x += state.enemyDir * speed * dt * 12; }
 
-      // Step ned lidt oftere
+      // Step ned
       if((t|0) % 1600 < 16){
         for(const e of state.enemies){ e.y += 6 + Math.min(12, state.level*1.1); }
       }
@@ -378,7 +396,6 @@
           state.gameOver = true;
           overlay.classList.add('show');
         }else{
-          // ny bølge samme level, let straf: ryk dem lidt op igen
           spawnWave(state.level);
         }
       }
@@ -400,13 +417,16 @@
       requestAnimationFrame(loop);
     }
 
-    // Start første runde når musen bevæger sig over spillet
+    // Start første runde ved mouseenter
     let armed = false;
     canvas.addEventListener('mouseenter', () => {
       if(!armed && !state.gameOver){
         armed = true; state.running = true; lastT = performance.now(); requestAnimationFrame(loop);
       }
     });
+
+    // Hvis logoet loader efter init, justér spillerens højde
+    playerImg.addEventListener('load', placePlayer);
 
     // Init
     updateHUD();
