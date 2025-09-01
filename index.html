@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tænk før du klikker — Awareness test</title>
-  <meta name="description" content="Kort awareness-budskab til IT-sikkerhed — Tænk før du klikker. Heldigvis var dette kun en test… men du skylder nu kage." />
+  <title>Tænk før du klikker — Awareness test + Kagespil</title>
+  <meta name="description" content="Kort awareness-budskab til IT-sikkerhed og et lille kage-space-invaders spil." />
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#0a84ff" />
   <style>
@@ -18,7 +18,7 @@
       --accent-2: #64d2ff;
       --radius: 18px;
       --shadow: 0 10px 30px hsl(0 0% 0% / .35);
-      --maxw: 1024px;
+      --maxw: 1200px;
     }
     @media (prefers-color-scheme: light){
       :root{
@@ -46,7 +46,7 @@
     }
     .wrap{ max-width: var(--maxw); margin: 0 auto; padding: clamp(16px, 2vw, 32px); }
     header{
-      display:flex; align-items:center; gap:12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding: 14px;
       border-radius: calc(var(--radius) + 6px);
       backdrop-filter: saturate(140%) blur(10px);
@@ -56,16 +56,39 @@
     }
     .brand{ display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px; }
     .badge{ font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: hsl(0 0% 100% / .08); }
-    .hero{ margin: clamp(24px, 4vw, 48px) 0; display:grid; grid-template-columns: 1.1fr .9fr; gap: clamp(16px, 3vw, 28px); }
-    @media (max-width: 900px){ .hero{ grid-template-columns: 1fr } }
-    .card{ border-radius: var(--radius); backdrop-filter: blur(12px) saturate(160%); background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: clip; }
-    .p-lg{ padding: clamp(18px, 3vw, 28px) }
-    .p-md{ padding: clamp(14px, 2vw, 20px) }
-    h1{ margin: 0 0 .4em; font-size: clamp(32px, 4vw, 54px); line-height: 1.1; letter-spacing: -0.02em; }
-    .lede{ font-size: clamp(16px, 1.4vw, 20px); color: var(--muted); margin: 0 0 18px; }
-    .tip-list{ margin: 16px 0 0; padding: 0 0 0 1.2em; }
-    .tip-list li{ margin: .25em 0 }
-    .btn-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 18px }
+    .grid{
+      display:grid; gap: clamp(16px, 2.5vw, 24px);
+      grid-template-columns: 1.05fr .95fr;
+      margin-top: clamp(20px,3vw,28px);
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr } }
+    .card{
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px) saturate(160%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: clip;
+      padding: clamp(18px, 3vw, 28px);
+    }
+    h1{ margin: 0 0 .4em; font-size: clamp(30px, 4vw, 48px); line-height:1.1; letter-spacing:-0.02em; }
+    .lede{ font-size: clamp(16px, 1.3vw, 19px); color: var(--muted); margin: 0 0 16px; }
+    .layout{
+      display:grid; gap: clamp(16px, 2.5vw, 24px);
+      grid-template-columns: 1.1fr .9fr;
+    }
+    @media (max-width: 900px){ .layout{ grid-template-columns: 1fr } }
+    figure{ margin:0; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); overflow:hidden; background: hsl(0 0% 100% /.04); }
+    img{ display:block; width:100%; height:auto; object-fit: cover; transform: scale(1.002); }
+    figcaption{ padding: 10px 14px; font-size: 14px; color: var(--muted); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .field{ display:grid; gap:6px; margin: 10px 0 2px; }
+    .input{
+      width:100%; padding: 12px 14px; border-radius: 12px;
+      border:1px solid var(--border); background: hsl(0 0% 100% / .06);
+      color: var(--fg); outline:none;
+    }
+    .hint{ font-size: 12px; color: var(--muted) }
+    .btn-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px }
     .btn{
       appearance:none; border:0; cursor:pointer; padding: 12px 16px; border-radius: 14px;
       font-weight: 600; background: linear-gradient(180deg, var(--accent), var(--accent-2));
@@ -73,23 +96,44 @@
       transition: transform .15s ease, filter .2s ease;
     }
     .btn:active{ transform: translateY(1px) scale(.995) }
-    figure{ margin:0; position:relative; overflow:hidden; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: hsl(0 0% 100% / .04); }
-    img{ display:block; width:100%; height:auto; object-fit: cover; transform: scale(1.002); }
-    figcaption{ padding: 10px 14px; font-size: 14px; color: var(--muted); display:flex; align-items:center; gap:8px; justify-content:space-between; }
-    .foot{ margin: 28px 0 10px; font-size: 13px; color: var(--muted); }
+    .foot{ margin-top: 18px; font-size: 13px; color: var(--muted); }
     .fade-in{ opacity:0; transform: translateY(8px); animation: in .55s ease forwards }
-    .fade-in:nth-child(2){ animation-delay: .08s }
-    .fade-in:nth-child(3){ animation-delay: .14s }
     @keyframes in{ to{ opacity:1; transform:none } }
     @media (prefers-reduced-motion: reduce){ .fade-in{ animation:none; opacity:1; transform:none } .btn{ transition:none } }
     #fx{ position: fixed; inset: 0; pointer-events: none; }
     a{ color: var(--accent) }
+
+    /* Game styles */
+    .game-wrap{
+      display:grid; gap:12px;
+      grid-template-rows: auto 1fr auto;
+      min-height: 420px;
+    }
+    .hud{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      font-size: 14px; color: var(--muted);
+    }
+    .canvas-frame{
+      position: relative; border-radius: 14px; overflow: hidden;
+      border:1px solid var(--border); background: hsl(0 0% 100% / .05);
+      min-height: 300px;
+    }
+    canvas{ display:block; width:100%; height:100%; }
+    .game-cta{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .pill{
+      padding:6px 10px; border-radius:999px; border:1px solid var(--border);
+      background:hsl(0 0% 100% / .06); font-size:12px;
+    }
   </style>
 </head>
 <body>
   <canvas id="fx" aria-hidden="true"></canvas>
+
+  <!-- Header (beholdes som ønsket) -->
   <div class="wrap">
-    <header class="card p-md fade-in" role="banner">
+    <header class="fade-in" role="banner">
       <div class="brand" aria-label="Brand">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -98,86 +142,79 @@
         </svg>
         <span>Awareness • IT-sikkerhed</span>
       </div>
-      <span class="badge" aria-label="test badge">Dette er en test</span>
+      <span class="badge">Dette er en test</span>
     </header>
 
-    <main class="hero" role="main">
-      <!-- Budskab -->
-      <section class="card p-lg fade-in" aria-labelledby="h-title">
+    <!-- To kolonner: venstre = din rubrik, højre = spil -->
+    <div class="grid">
+      <!-- Venstre: samlet rubrik (som tidligere) -->
+      <main class="card fade-in" role="main" aria-labelledby="h-title">
         <h1 id="h-title">🔒 Tænk før du klikker</h1>
         <p class="lede">
           Selv mails og beskeder fra kendte eller tillidsvækkende afsendere kan være manipulerede.
           Klik aldrig på links eller åbn filer ukritisk — stop altid op og overvej, om det giver mening.
         </p>
-        <ul class="tip-list" aria-label="hurtige tips">
-          <li>Hold musen over linket og tjek adressen, før du klikker.</li>
-          <li>Er du i tvivl? Brug en <em>ny</em> tråd/kanal og ring/skriv til afsenderen.</li>
-          <li>Rapportér mistænkelige mails via virksomhedens procedure.</li>
-        </ul>
-      </section>
 
-      <!-- Kage + én knap -->
-      <section class="card p-lg fade-in" aria-labelledby="cake-title">
-        <h2 id="cake-title" style="margin:0 0 .6em; font-size:clamp(22px,2.4vw,28px)">👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰</h2>
-        <figure>
-          <img id="cake" alt="En lækker lagkage, blød glasur og smulder på toppen" />
-          <figcaption>
-            <span>Bevismateriale</span>
-            <a id="cakeLink" target="_blank" rel="noopener">Åbn billedet</a>
-          </figcaption>
-        </figure>
+        <div class="layout">
+          <!-- Tekst + navn + knap -->
+          <section>
+            <h2 style="margin:0 0 .6em; font-size:clamp(20px,2.2vw,26px)">👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰</h2>
 
-        <div class="btn-row">
-          <button class="btn" id="cakeBtn" aria-label="Bekræft og send mail">Jeg tager kage med</button>
+            <form id="ackForm" onsubmit="return false;">
+              <div class="field">
+                <label for="userName">Dit navn</label>
+                <input id="userName" class="input" name="userName" type="text" inputmode="text" autocomplete="name"
+                      placeholder="Skriv dit navn … (bruges i mailen)" />
+                <div class="hint" id="toHint">Modtager: <span id="toDisplay"></span> (kan sættes med <code>?to=mail@domæne.dk</code>)</div>
+              </div>
+
+              <div class="btn-row">
+                <button class="btn" id="cakeBtn" aria-label="Bekræft og send mail">Jeg tager kage med</button>
+              </div>
+            </form>
+
+            <p class="foot">PS: Vores mål er ikke at fange dig — men at hjælpe dig med at opdage forsøgene i tide.</p>
+          </section>
+
+          <!-- Billede -->
+          <section>
+            <figure>
+              <img id="cake" alt="En lækker lagkage, blød glasur og smulder på toppen" />
+              <figcaption>
+                <span>Bevismateriale</span>
+                <a id="cakeLink" target="_blank" rel="noopener">Åbn billedet</a>
+              </figcaption>
+            </figure>
+          </section>
         </div>
+      </main>
 
-        <p class="foot">PS: Vores mål er ikke at fange dig — men at hjælpe dig med at opdage forsøgene i tide.</p>
-      </section>
-    </main>
+      <!-- Højre: Space-Invaders-agtigt kagespil -->
+      <aside class="card fade-in" aria-labelledby="game-title">
+        <h2 id="game-title" style="margin:0 0 .6em; font-size:clamp(20px,2.2vw,26px)">🍰 Kage-Invaders</h2>
+        <div class="game-wrap">
+          <div class="hud">
+            <div class="game-cta">
+              <button class="btn" id="startBtn">Start / Pause</button>
+              <span class="pill">Styring: bevæg musen ▸ klik for at skyde</span>
+            </div>
+            <div>
+              <span>Score: <strong id="score">0</strong></span>
+              <span style="margin-left:12px">Level: <strong id="level">1</strong></span>
+              <span style="margin-left:12px">Liv: <strong id="lives">3</strong></span>
+            </div>
+          </div>
+          <div class="canvas-frame">
+            <canvas id="game" width="600" height="380" aria-label="Kagespil canvas"></canvas>
+          </div>
+          <div class="hint">Tip: Ram så mange 🍰 som muligt. Kagerne bevæger sig hurtigere for hvert level!</div>
+        </div>
+      </aside>
+    </div>
   </div>
 
   <script>
-    // ---- Brug lokal fil i samme mappe
-    const CAKE_IMG_URL = "kage.png";
-    const RECIPIENT_EMAIL = "jh@ravnit.dk";
-
-    // Sæt billede + link
-    const cakeImg = document.getElementById('cake');
-    const cakeLink = document.getElementById('cakeLink');
-    cakeImg.src = CAKE_IMG_URL;
-    cakeLink.href = CAKE_IMG_URL;
-
-    // Knap: konfetti + åbn mailklient
-    document.getElementById('cakeBtn').addEventListener('click', () => {
-      // 1) Konfetti + lille toast
-      confetti({ duration: 1400, count: 180 });
-      toast("Respekt! Kage er på vej 🎉");
-
-      // 2) Forudfyldt mail
-      const subject = "Awareness test: Jeg har klikket — jeg skylder kage";
-      const body =
-`Hej,
-
-Jeg klikkede på linket i awareness-testen og anerkender hermed, at jeg skylder kage. 🍰
-
-Tidspunkt: ${new Date().toLocaleString()}
-Enhed: ${navigator.platform}
-Browser: ${navigator.userAgent}
-
-Hilsen
-— (Skriv dit navn her)`;
-
-      const mailto = `mailto:${encodeURIComponent(RECIPIENT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-      // Giv konfettien et kort øjeblik til at spille, før mailklienten åbnes
-      setTimeout(() => {
-        // window.open bevarer siden i samme vindue hos mange browsere
-        const w = window.open(mailto);
-        if(!w){ window.location.href = mailto; }
-      }, 600);
-    });
-
-    // Mini toast
+    /* ===== Shared visuals (toast + confetti) ===== */
     function toast(msg){
       const el = document.createElement('div');
       el.textContent = msg;
@@ -194,7 +231,6 @@ Hilsen
       setTimeout(()=> el.remove(), 1800);
     }
 
-    // Let konfetti-motor (canvas)
     function confetti({duration=1200, count=150}={}){
       if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const canvas = document.getElementById('fx');
@@ -223,13 +259,9 @@ Hilsen
         ctx.clearRect(0,0,innerWidth,innerHeight);
         for(const p of parts){
           p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.rv * dt;
-          if(p.y > innerHeight + 20) { p.y = -10; p.x = rand(0, innerWidth) }
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.r * Math.PI/180);
-          ctx.fillStyle = p.c;
-          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-          ctx.restore();
+          if(p.y > innerHeight + 20) { p.y = -10; p.x = Math.random()*innerWidth }
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r * Math.PI/180);
+          ctx.fillStyle = p.c; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
         }
         if(t - start < duration){ raf = requestAnimationFrame(tick) }
         else { ctx.clearRect(0,0,innerWidth,innerHeight); cancelAnimationFrame(raf) }
@@ -237,6 +269,258 @@ Hilsen
       addEventListener('resize', resize, { once:true });
       raf = requestAnimationFrame(tick);
     }
+
+    /* ===== Awareness-rubrik (navn + mail) ===== */
+    const CAKE_IMG_URL_DEFAULT = "kage.png";
+    const RECIPIENT_DEFAULT = "jh@ravnit.dk";
+    const qs = new URLSearchParams(location.search);
+    const RECIPIENT_EMAIL = (qs.get("to") || RECIPIENT_DEFAULT).trim();
+
+    const cakeImg = document.getElementById('cake');
+    const cakeLink = document.getElementById('cakeLink');
+    cakeImg.src = CAKE_IMG_URL_DEFAULT;
+    cakeLink.href = CAKE_IMG_URL_DEFAULT;
+
+    document.getElementById('toDisplay').textContent = RECIPIENT_EMAIL;
+
+    document.getElementById('ackForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('cakeBtn').click();
+    });
+
+    document.getElementById('cakeBtn').addEventListener('click', () => {
+      const name = (document.getElementById('userName').value || "").trim();
+      confetti({ duration: 1400, count: 180 });
+      toast("Respekt! Kage er på vej 🎉");
+
+      const subject = `Awareness test: ${name ? name + " " : ""}skylder kage`;
+      const body =
+`Hej,
+
+Jeg klikkede på linket i awareness-testen og anerkender hermed, at jeg skylder kage. 🍰
+
+Navn: ${name || "(ikke udfyldt)"}
+Tidspunkt: ${new Date().toLocaleString()}
+Enhed: ${navigator.platform}
+Browser: ${navigator.userAgent}
+
+Hilsen
+${name || "(skriv dit navn her)"}`;
+
+      const mailto = `mailto:${encodeURIComponent(RECIPIENT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setTimeout(() => {
+        const w = window.open(mailto);
+        if(!w){ window.location.href = mailto; }
+      }, 600);
+    });
+
+    /* ===== Kage-Invaders spil (mus + klik) ===== */
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    // Responsive canvas (retina)
+    function fitCanvas(){
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      // Behold aspect fra attrib width/height men tilpas CSS-størrelse
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(400, rect.width) * dpr;
+      canvas.height = Math.max(280, rect.height) * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0); // skaler tegning til CSS pixels
+    }
+    const ro = new ResizeObserver(fitCanvas);
+    ro.observe(canvas.parentElement);
+    fitCanvas();
+
+    // Spiltilstand
+    const state = {
+      running: false,
+      score: 0,
+      level: 1,
+      lives: 3,
+      lastShotAt: 0,
+      shootDelay: 220, // ms
+      mouseX: 0,
+      player: { x: 200, y: 0, w: 64, h: 14 },
+      bullets: [],
+      enemies: [],
+      enemyDir: 1, // 1 -> højre, -1 -> venstre
+      enemySpeedBase: 0.6,
+      waveClearedAt: 0
+    };
+
+    // Initial placering af player (nederst)
+    function placePlayer(){
+      const H = canvas.clientHeight;
+      state.player.y = H - 36;
+      state.player.x = (canvas.clientWidth - state.player.w) / 2;
+    }
+    placePlayer();
+
+    // Lav en bølge kage-fjender
+    function spawnWave(level=1){
+      state.enemies.length = 0;
+      const cols = Math.min(10, 6 + Math.floor(level * 0.8));
+      const rows = Math.min(6, 3 + Math.floor(level * 0.5));
+      const spacingX = 56, spacingY = 46;
+      const offsetX = 32, offsetY = 28;
+      for(let r=0; r<rows; r++){
+        for(let c=0; c<cols; c++){
+          state.enemies.push({
+            x: offsetX + c*spacingX,
+            y: offsetY + r*spacingY,
+            w: 34,
+            h: 28,
+            hp: 1,
+            emoji: "🍰",
+          });
+        }
+      }
+      state.enemyDir = 1;
+    }
+    spawnWave(1);
+
+    // Input (mus)
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      state.mouseX = e.clientX - rect.left;
+    });
+    canvas.addEventListener('click', shoot);
+    // Skyde-funktion
+    function shoot(){
+      const now = performance.now();
+      if(now - state.lastShotAt < state.shootDelay) return;
+      state.lastShotAt = now;
+      // Kuglens udgangspunkt midt over player
+      state.bullets.push({ x: state.player.x + state.player.w/2 - 2, y: state.player.y - 8, w: 4, h: 10, vy: -7.2 });
+    }
+
+    // Start/Pause
+    const startBtn = document.getElementById('startBtn');
+    startBtn.addEventListener('click', () => {
+      state.running = !state.running;
+      if(state.running){
+        lastT = performance.now();
+        loop(lastT);
+      }
+    });
+
+    // Tegne-hjælpere
+    function drawPlayer(){
+      const p = state.player;
+      ctx.fillStyle = 'white';
+      // Lille "skib"/bar
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.fillRect(p.x + p.w*0.4, p.y - 10, p.w*0.2, 10); // tårn
+    }
+    function drawBullet(b){
+      ctx.fillStyle = '#64d2ff';
+      ctx.fillRect(b.x, b.y, b.w, b.h);
+    }
+    function drawEnemy(e){
+      // Emoji som kage
+      ctx.font = '24px system-ui, Apple Color Emoji, Segoe UI Emoji';
+      ctx.textBaseline = 'top';
+      ctx.fillText(e.emoji, e.x, e.y - 4);
+      // Diskret hitbox (debug off)
+      // ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.strokeRect(e.x, e.y, e.w, e.h);
+    }
+    function drawHUD(){
+      document.getElementById('score').textContent = state.score;
+      document.getElementById('level').textContent = state.level;
+      document.getElementById('lives').textContent = state.lives;
+    }
+
+    // Kollisionscheck (Axis-Aligned Bounding Box)
+    function aabb(a,b){
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    // Game loop
+    let lastT = performance.now();
+    function loop(t){
+      if(!state.running) return;
+      const dt = Math.min(33, t - lastT) / 16.666; // ~60fps normaliseret
+      lastT = t;
+
+      const W = canvas.clientWidth, H = canvas.clientHeight;
+
+      // Opdater player mod musens X
+      const targetX = Math.max(4, Math.min(W - state.player.w - 4, state.mouseX - state.player.w/2));
+      state.player.x += (targetX - state.player.x) * 0.3;
+
+      // Opdater bullets
+      for(const b of state.bullets){ b.y += b.vy * dt; }
+      state.bullets = state.bullets.filter(b => b.y + b.h > 0);
+
+      // Opdater fjender (vandret bevægelse + step ned ved kant)
+      const speed = (state.enemySpeedBase + (state.level-1)*0.15) * 1.2;
+      let minX=Infinity, maxX=-Infinity;
+      for(const e of state.enemies){ minX = Math.min(minX, e.x); maxX = Math.max(maxX, e.x + e.w); }
+      if(maxX > W - 16) state.enemyDir = -1;
+      if(minX < 16) state.enemyDir = 1;
+      for(const e of state.enemies){ e.x += state.enemyDir * speed * dt * 10; }
+
+      // Af og til step ned
+      if((t|0) % 1500 < 16){
+        for(const e of state.enemies){ e.y += 6 + Math.min(10, state.level*1.2); }
+      }
+
+      // Kollision: kugler vs fjender
+      for(const b of state.bullets){
+        for(const e of state.enemies){
+          if(aabb(b, e)){
+            e.hp -= 1;
+            b.y = -9999; // fjern kugle
+            state.score += 10;
+            confetti({ duration: 300, count: 20 });
+            break;
+          }
+        }
+      }
+      state.enemies = state.enemies.filter(e => e.hp > 0);
+
+      // Tjek nederlag (fjende rører bunden)
+      if(state.enemies.some(e => e.y + e.h >= state.player.y)){
+        state.lives -= 1;
+        toast("Av! En kage slap igennem 💥");
+        // Reset bølge
+        spawnWave(state.level);
+        if(state.lives <= 0){
+          state.running = false;
+          toast("Game over — prøv igen!");
+        }
+      }
+
+      // Næste level hvis ryddet
+      if(state.enemies.length === 0){
+        state.level += 1;
+        state.enemySpeedBase += 0.2;
+        spawnWave(state.level);
+        toast(`Level ${state.level} 🍰`);
+      }
+
+      // Ryd canvas og tegn
+      ctx.clearRect(0,0,W,H);
+      drawPlayer();
+      for(const b of state.bullets) drawBullet(b);
+      for(const e of state.enemies) drawEnemy(e);
+      drawHUD();
+
+      // Autoskyd, hvis mus holdes nede (valgfri): vi holder det ved klik for simpelt.
+      requestAnimationFrame(loop);
+    }
+
+    // Start spillet automatisk, når brugeren første gang bevæger musen henover canvas
+    let armed = false;
+    canvas.addEventListener('mouseenter', () => {
+      if(!armed){ armed = true; state.running = true; lastT = performance.now(); loop(lastT); }
+    });
+
+    // Tastatur fallback (venstre/højre + mellemrum skyder)
+    window.addEventListener('keydown', (e) => {
+      if(e.code === 'Space'){ shoot(); }
+      if(e.code === 'KeyP'){ state.running = !state.running; if(state.running){ lastT = performance.now(); loop(lastT); } }
+    });
   </script>
 </body>
 </html>
