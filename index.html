@@ -73,7 +73,6 @@
       transition: transform .15s ease, filter .2s ease;
     }
     .btn:active{ transform: translateY(1px) scale(.995) }
-    .btn.secondary{ background: transparent; color: var(--fg); border:1px solid var(--border); box-shadow: none; }
     figure{ margin:0; position:relative; overflow:hidden; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: hsl(0 0% 100% / .04); }
     img{ display:block; width:100%; height:auto; object-fit: cover; transform: scale(1.002); }
     figcaption{ padding: 10px 14px; font-size: 14px; color: var(--muted); display:flex; align-items:center; gap:8px; justify-content:space-between; }
@@ -85,7 +84,6 @@
     @media (prefers-reduced-motion: reduce){ .fade-in{ animation:none; opacity:1; transform:none } .btn{ transition:none } }
     #fx{ position: fixed; inset: 0; pointer-events: none; }
     a{ color: var(--accent) }
-    .sr-only{ position:absolute; width:1px; height:1px; margin:-1px; padding:0; border:0; clip:rect(0 0 0 0); overflow:hidden; }
   </style>
 </head>
 <body>
@@ -104,6 +102,7 @@
     </header>
 
     <main class="hero" role="main">
+      <!-- Budskab -->
       <section class="card p-lg fade-in" aria-labelledby="h-title">
         <h1 id="h-title">🔒 Tænk før du klikker</h1>
         <p class="lede">
@@ -115,13 +114,9 @@
           <li>Er du i tvivl? Brug en <em>ny</em> tråd/kanal og ring/skriv til afsenderen.</li>
           <li>Rapportér mistænkelige mails via virksomhedens procedure.</li>
         </ul>
-        <div class="btn-row">
-          <button class="btn" id="copyBtn" aria-describedby="copyStatus">Kopiér budskabet</button>
-          <button class="btn secondary" id="printBtn">Print som plakat</button>
-        </div>
-        <p id="copyStatus" class="sr-only" role="status" aria-live="polite"></p>
       </section>
 
+      <!-- Kage + én knap -->
       <section class="card p-lg fade-in" aria-labelledby="cake-title">
         <h2 id="cake-title" style="margin:0 0 .6em; font-size:clamp(22px,2.4vw,28px)">👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰</h2>
         <figure>
@@ -131,10 +126,11 @@
             <a id="cakeLink" target="_blank" rel="noopener">Åbn billedet</a>
           </figcaption>
         </figure>
+
         <div class="btn-row">
-          <button class="btn" id="cakeBtn">Jeg tager kage med</button>
-          <button class="btn secondary" id="shareBtn">Del siden</button>
+          <button class="btn" id="cakeBtn" aria-label="Bekræft og send mail">Jeg tager kage med</button>
         </div>
+
         <p class="foot">PS: Vores mål er ikke at fange dig — men at hjælpe dig med at opdage forsøgene i tide.</p>
       </section>
     </main>
@@ -143,51 +139,45 @@
   <script>
     // ---- Brug lokal fil i samme mappe
     const CAKE_IMG_URL = "kage.png";
+    const RECIPIENT_EMAIL = "jh@ravnit.dk";
 
-    // Set image + link
+    // Sæt billede + link
     const cakeImg = document.getElementById('cake');
     const cakeLink = document.getElementById('cakeLink');
     cakeImg.src = CAKE_IMG_URL;
     cakeLink.href = CAKE_IMG_URL;
 
-    // Copy text
-    const copyBtn = document.getElementById('copyBtn');
-    const copyStatus = document.getElementById('copyStatus');
-    copyBtn.addEventListener('click', async () => {
-      const text = `🔒 Tænk før du klikker
-Selv mails og beskeder fra kendte eller tillidsvækkende afsendere kan være manipulerede.
-Klik aldrig på links eller åbn filer ukritisk — stop altid op og overvej, om det giver mening.
-
-👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰`;
-      try{
-        await navigator.clipboard.writeText(text);
-        copyStatus.textContent = "Teksten er kopieret.";
-        toast("Teksten er kopieret ✅");
-      }catch{
-        copyStatus.textContent = "Kunne ikke kopiere automatisk — marker teksten og kopier.";
-        toast("Kunne ikke kopiere automatisk");
-      }
-    });
-
-    // Print
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
-
-    // Share
-    document.getElementById('shareBtn').addEventListener('click', async () => {
-      if(navigator.share){
-        try{
-          await navigator.share({ title: document.title, text: "Tænk før du klikker — awareness test", url: location.href });
-        }catch(e){}
-      } else { toast("Deling ikke understøttet på denne enhed"); }
-    });
-
-    // Cake button
+    // Knap: konfetti + åbn mailklient
     document.getElementById('cakeBtn').addEventListener('click', () => {
+      // 1) Konfetti + lille toast
       confetti({ duration: 1400, count: 180 });
       toast("Respekt! Kage er på vej 🎉");
+
+      // 2) Forudfyldt mail
+      const subject = "Awareness test: Jeg har klikket — jeg skylder kage";
+      const body =
+`Hej,
+
+Jeg klikkede på linket i awareness-testen og anerkender hermed, at jeg skylder kage. 🍰
+
+Tidspunkt: ${new Date().toLocaleString()}
+Enhed: ${navigator.platform}
+Browser: ${navigator.userAgent}
+
+Hilsen
+— (Skriv dit navn her)`;
+
+      const mailto = `mailto:${encodeURIComponent(RECIPIENT_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      // Giv konfettien et kort øjeblik til at spille, før mailklienten åbnes
+      setTimeout(() => {
+        // window.open bevarer siden i samme vindue hos mange browsere
+        const w = window.open(mailto);
+        if(!w){ window.location.href = mailto; }
+      }, 600);
     });
 
-    // Toast helper
+    // Mini toast
     function toast(msg){
       const el = document.createElement('div');
       el.textContent = msg;
@@ -204,7 +194,7 @@ Klik aldrig på links eller åbn filer ukritisk — stop altid op og overvej, om
       setTimeout(()=> el.remove(), 1800);
     }
 
-    // Confetti
+    // Let konfetti-motor (canvas)
     function confetti({duration=1200, count=150}={}){
       if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const canvas = document.getElementById('fx');
