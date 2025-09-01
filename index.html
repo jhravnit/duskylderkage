@@ -80,7 +80,10 @@
     figure{ margin:0; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); overflow:hidden; background: hsl(0 0% 100% /.04); }
     img{ display:block; width:100%; height:auto; object-fit: cover; transform: translateZ(0); }
 
-    .btn-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px }
+    /* Mindre kage-billede + centrering */
+    .cake-figure{ max-width: min(520px, 90%); margin: 0 auto; }
+
+    .btn-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 14px; justify-content:center }
     .btn{
       appearance:none; border:0; cursor:pointer; padding: 12px 16px; border-radius: 14px;
       font-weight: 600; background: linear-gradient(180deg, var(--accent), var(--accent-2));
@@ -131,7 +134,7 @@
         <h2>👉 Heldigvis var dette kun en test … men du skylder nu kage 🍰</h2>
         <p class="lede">Tak fordi du spiller med — pointen er at opdage trickene i tide. Kagen er bare en kærlig påmindelse om, at vi alle kan blive snydt, hvis vi skynder os.</p>
 
-        <figure>
+        <figure class="cake-figure">
           <img src="kage.png" alt="Kage" />
         </figure>
         <div class="btn-row">
@@ -223,17 +226,17 @@
       setTimeout(()=>{ window.location.href = mailto; }, 500);
     });
 
-    /* ===== Kage-Invaders (hurtigere) + Ravn IT logo som spiller ===== */
+    /* ===== Kage-Invaders med Ravn IT logo (ravit.jpg) ===== */
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
     const overlay = document.getElementById('overlay');
 
-    // Logo-konfiguration
-    const PLAYER_LOGO_URL = "ravit.jpg"; // ← ret filnavn hvis dit logo hedder noget andet
+    // Brug JPG-logo
+    const PLAYER_LOGO_URL = "ravit.jpg";
     const playerImg = new Image();
     playerImg.src = PLAYER_LOGO_URL;
     let playerImgReady = false;
-    playerImg.onload = () => { playerImgReady = true; };
+    playerImg.onload = () => { playerImgReady = true; placePlayer(); };
 
     // Responsiv/retina
     function fitCanvas(){
@@ -252,21 +255,24 @@
       score:0, level:1, lives:3,
       lastShotAt:0, shootDelay:180,
       mouseX: canvas.clientWidth/2,
-      player:{x:280,y:0,w:96,h:28}, // bredde til logoet
+      // Startmål: lidt mindre bredde, højde sættes dynamisk efter logoets ratio:
+      player:{x:280,y:0,w:84,h:26},
       bullets:[], enemies:[], enemyDir:1,
       enemySpeedBase:0.6,
     };
 
     function placePlayer(){
       const H = canvas.clientHeight;
-      // justér højde ift. logoets ratio, hvis kendt
+      // Skalér højde efter billedets ratio (JPG er ok)
       if (playerImgReady && playerImg.naturalWidth && playerImg.naturalHeight){
         const ratio = playerImg.naturalHeight / playerImg.naturalWidth;
-        state.player.h = Math.max(20, Math.round(state.player.w * ratio));
+        // Hold bredden, men sæt højde efter ratio, clamp for pæn størrelse
+        state.player.h = Math.max(20, Math.min(40, Math.round(state.player.w * ratio)));
       }
       state.player.y = H - (state.player.h + 20);
       state.player.x = (canvas.clientWidth - state.player.w)/2;
     }
+
     function spawnWave(level=1){
       state.enemies.length = 0;
       const cols = Math.min(10, 6 + Math.floor(level * 0.8));
@@ -280,6 +286,7 @@
       }
       state.enemyDir = 1;
     }
+
     function resetGame(){
       state.running=true; state.gameOver=false;
       state.score=0; state.level=1; state.lives=3;
@@ -301,7 +308,6 @@
       if(state.gameOver){ resetGame(); return; }
       shoot();
     });
-    // Klik på overlay starter ny omgang
     overlay.addEventListener('click', ()=>{ if(state.gameOver) resetGame(); });
 
     function shoot(){
@@ -323,16 +329,16 @@
       document.getElementById('lives').textContent = state.lives;
     }
 
-    // Kollision
+    // Kollisionscheck
     function aabb(a,b){ return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
 
     // Tegn
     function drawPlayer(){
       const p = state.player;
       if(playerImgReady){
-        ctx.drawImage(playerImg, p.x, p.y - (p.h*0.02), p.w, p.h); // lille optisk justering
+        // Tegn JPG-logoet; lille optisk løft for at “hvile” på bunden
+        ctx.drawImage(playerImg, p.x, p.y - (p.h*0.02), p.w, p.h);
       } else {
-        // Fallback: diskret "placeholder"
         ctx.fillStyle = 'rgba(255,255,255,.85)';
         ctx.fillRect(p.x, p.y, p.w, p.h);
       }
@@ -407,7 +413,7 @@
         spawnWave(state.level);
       }
 
-      // Tegn
+      // Tegn & HUD
       ctx.clearRect(0,0,W,H);
       drawPlayer();
       for(const b of state.bullets) drawBullet(b);
@@ -424,9 +430,6 @@
         armed = true; state.running = true; lastT = performance.now(); requestAnimationFrame(loop);
       }
     });
-
-    // Hvis logoet loader efter init, justér spillerens højde
-    playerImg.addEventListener('load', placePlayer);
 
     // Init
     updateHUD();
